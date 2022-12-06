@@ -1,13 +1,8 @@
-package com.example.dto;
+package com.example.model;
 
-
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
 @Builder
 public class User {
@@ -17,6 +12,5 @@ public class User {
     private String username;
     private String password;
     private String address;
-    private String contact;
-    private String role;
+    private String email;
 }
