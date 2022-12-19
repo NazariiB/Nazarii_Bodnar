@@ -1,9 +1,8 @@
 package com.example.service;
 
-import com.example.dto.UserDTO;
+import com.example.model.User;
 
-
-public interface UserService extends BaseInterface<UserDTO> {
-    UserDTO getUserByUsername(String username);
-
+public interface UserService extends GeneralService<User, Integer> {
+    User getByUserName(String username);
+    boolean isPasswordCorrect(String username, String password);
 }

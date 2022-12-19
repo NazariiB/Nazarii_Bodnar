@@ -1,7 +1,6 @@
 package com.example.service;
 
-import com.example.dto.TrainDTO;
+import com.example.model.Train;
 
-public interface TrainService extends BaseInterface<TrainDTO> {
-    void bookPlace(Integer id, Integer amountSeats);
+public interface TrainService extends GeneralService<Train, Integer> {
 }

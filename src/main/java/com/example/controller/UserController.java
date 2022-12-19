@@ -1,54 +1,60 @@
 package com.example.controller;
 
+import com.example.controller.assembler.UserAssembler;
 import com.example.dto.UserDTO;
-import com.example.dto.group.OnCreate;
-import com.example.dto.group.OnUpdate;
+import com.example.model.User;
 import com.example.service.UserService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-@Slf4j
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
 
+    private final UserAssembler userAssembler;
+
     @GetMapping("/all")
-    public ResponseEntity<List<UserDTO>> getAllUsers(){
-        return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+    public ResponseEntity<CollectionModel<UserDTO>> getAll() {
+        return new ResponseEntity<>(userAssembler.toCollectionModel(userService.findAll()), HttpStatus.OK);
     }
 
     @GetMapping("/id/{id}")
-    public ResponseEntity<UserDTO> getUser(@PathVariable Integer id) {
-        return new ResponseEntity<>(userService.getById(id), HttpStatus.OK);
+    public ResponseEntity<UserDTO> getById(@PathVariable int id) {
+        return new ResponseEntity<>(userAssembler.toModel(userService.findById(id)), HttpStatus.OK);
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<UserDTO> getUserByUsername(@PathVariable String username) {
-        return new ResponseEntity<>(userService.getUserByUsername(username), HttpStatus.OK);
+    public ResponseEntity<UserDTO> getByUsername(@PathVariable String username) {
+        return new ResponseEntity<>(userAssembler.toModel(userService.getByUserName(username)), HttpStatus.OK);
+    }
+
+    @GetMapping("/correct/{username}")
+    public ResponseEntity<Boolean> isPasswordCorrect(@PathVariable String username, @RequestBody String password) {
+        return new ResponseEntity<>(userService.isPasswordCorrect(username, password), HttpStatus.OK);
     }
 
     @PostMapping("/")
-    public ResponseEntity<UserDTO> createUser(@RequestBody @Validated(OnCreate.class) UserDTO user) {
-        log.info("get user " + user.getUsername());
-        return new ResponseEntity<>(userService.creat(user), HttpStatus.CREATED);
+    public ResponseEntity<UserDTO> create(@RequestBody User user) {
+        return new ResponseEntity<>(userAssembler.toModel(userService.create(user)), HttpStatus.OK);
     }
 
-    @PutMapping("/")
-    public ResponseEntity<UserDTO> updateUser(@Validated(OnUpdate.class) @RequestBody UserDTO user) {
-        return new ResponseEntity<>(userService.update(user), HttpStatus.OK);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody User user) {
+        userService.update(id, user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteUser(@PathVariable Integer id) {
-        userService.deleteById(id);
+    public ResponseEntity<?> delete(@PathVariable Integer id) {
+        userService.delete(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

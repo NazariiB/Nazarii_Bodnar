@@ -8,14 +8,17 @@ import lombok.Builder;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @Builder
 @JsonInclude(Include.NON_NULL)
-public class UserDTO extends RepresentationModel<UserDTO> {
+public class UserDTO extends RepresentationModel<UserDTO>{
 
-    @NotBlank(groups = OnUpdate.class)
+    @Min(value = 0, groups = OnUpdate.class)
     private int id;
 
     @NotBlank(groups = OnCreate.class)
@@ -33,7 +36,10 @@ public class UserDTO extends RepresentationModel<UserDTO> {
     @NotBlank(groups = OnCreate.class)
     private String address;
 
+    @Email
     @NotBlank(groups = { OnCreate.class, OnUpdate.class })
-    @Email(regexp = "[a-z]*@.*")
     private String email;
+
+    @NotNull(groups = { OnCreate.class, OnUpdate.class })
+    private List<TicketsDTO> tickets;
 }

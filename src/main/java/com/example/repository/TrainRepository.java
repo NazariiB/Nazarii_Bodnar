@@ -1,8 +1,10 @@
 package com.example.repository;
 
-import com.example.dto.TrainDTO;
 import com.example.model.Train;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TrainRepository extends CRUDoperations<Train> {
-    void bookPlace(Integer id, Integer amountSeats);
+@Repository
+public interface TrainRepository extends JpaRepository<Train, Integer> {
+
 }

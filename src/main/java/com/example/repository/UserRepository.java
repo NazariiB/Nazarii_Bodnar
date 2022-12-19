@@ -1,19 +1,13 @@
 package com.example.repository;
 
 import com.example.model.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import java.util.Optional;
 
-import java.util.List;
+@Repository
+public interface UserRepository extends JpaRepository<User, Integer> {
+    Optional<User> findByUsername(String username);
 
-public interface UserRepository extends CRUDoperations<User> {
-    List<User> getAll();
-
-    User getUserByUsername(String username);
-
-    User getById(Integer id);
-
-    void deleteById(Integer id);
-
-    User creat(User user);
-
-    User update(User user);
+    boolean existsByUsernameAndPassword(String username, String password);
 }
